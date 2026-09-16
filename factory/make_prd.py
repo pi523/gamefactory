@@ -94,7 +94,7 @@ def main():
                 + "\n规则：玩法物件的 states 优先采用工艺的状态序列（phases label，可合并为 3–4 态）；动词优先采用 verbs；失败条件采用 fail_surface（做过头会怎样）；"
                   "\"该停手\"的视觉判据（stop_cue）写成一条 browser/manual 需求；这些需求的 evidence 写 [视频抽帧] 并在 text 末尾括注工艺名。\n") if craft else "")
             + (("\n【参考游戏的风格观察（模仿风格，不复制素材）】\n" + json.dumps([{"title": v.get("title"), "style": v.get("style")} for v in research.get("videos", []) if v.get("relevant", True) and v.get("style")], ensure_ascii=False)
-                + "\n规则：PRD 必须带 style 字段 {art_style, render, mood, palette(hex 数组, 取 palette_kmeans 前 5 个并按风格调整), ui_style, props_style, background_style, style_prompt_en(60 词内英文生图风格提示), ui_palette{bg,panel,accent,text,danger}}，以最相关的参考为主；美术风格要**像参考**而不是默认暗黑写实。\n") if any(v.get("style") for v in research.get("videos", [])) else "")
+                + "\n规则：PRD 必须带 style 字段 {art_style, render, mood, palette(hex 数组, 取 palette_kmeans 前 5 个并按风格调整), ui_style, props_style, background_style, style_prompt_en(60 词内英文生图风格提示), ui_palette{bg,panel,accent,text,danger}}，以最相关的参考为主；美术风格要**像参考**而不是默认暗黑写实。\n") if research and any(v.get("style") for v in research.get("videos", [])) else "")
             + f"\nJSON Schema：\n{json.dumps(schema, ensure_ascii=False)}")
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
     prd = None; ok = False; game = None
