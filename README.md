@@ -20,11 +20,20 @@ python3 factory/serve.py 8765                           # 本地预览
 
 需要 Python 3.12+，不需要 node：JS 语法自检和所有浏览器操作都走 Python playwright。竞品视频那一步用 yt-dlp 抓取，抓不到会跳过不阻塞。
 
+## 手作模拟品类（craft）
+
+饮品、中餐这类"按工序做一份手艺"的游戏走另一条更短的线：引擎是人写好的模板（`vendor/craft/`：任务卡/工序条/镜头/结算/教程手、杯壶与流柱物理、蒸汽气泡、陈设库、穿模/组装/倒液检验），模型只写一个 150–300 行的工序模块（契约见 `specs/craft-module-contract.md`），检验器驾驭一整局、每步查穿模，驳回回灌重试。
+
+```bash
+.venv/bin/python factory/pipeline.py "豆腐脑摊：舀豆花、浇卤、加配料" --id doufunao --genre craft
+# 等价于 factory/craft_generate.py ...；成品 games/doufunao/index.html；加 --grade 跑外部模型盲测（需参考游戏）
+```
+
 ## 目录
 
 - `factory/` 流水线脚本，每个文件开头有一句说明；入口是 `pipeline.py`，检验器是 `verify.py`，手作品类盲测是 `craft_grade.py`
 - `specs/` PRD schema、硬性规定（`rules/h5-hard-rules.json`）、风格、素材命名、调试契约、品类规范
-- `vendor/` 游戏运行时：three.js、工厂运行时、穿模/组装/倒液检验
+- `vendor/` 游戏运行时：three.js、工厂运行时、穿模/组装/倒液检验；`vendor/craft/` 手作品类引擎模板 + 示例模块
 
 ## 不入库
 

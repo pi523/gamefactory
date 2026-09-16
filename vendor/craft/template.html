@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="../../vendor/craft/styles.css">
+<script type="importmap">
+{ "imports": { "three": "../../vendor/three.module.js" } }
+</script>
+</head>
+<body>
+<div id="app">
+<canvas id="stage"></canvas>
+
+<!-- 任务卡：客人一句话；只说要什么，不说要多少 -->
+<div id="order" class="card">
+  <div class="order-head"><span class="order-title" id="order-kind">这一杯</span><span id="order-no">#1</span></div>
+  <div id="order-name" class="order-name">—</div>
+  <div id="order-line" class="order-line">—</div>
+  <div id="order-parts" class="chips"></div>
+  <div class="order-foot"><span id="order-solids" class="chip small"><span class="dot"></span>—</span><span id="order-garnish" class="chip small"><span class="dot"></span>—</span></div>
+</div>
+
+<div id="steps"></div>
+
+<div id="dock">
+  <div id="hint">—</div>
+  <div id="meter-wrap"><div id="meter-label">—</div><div class="meter"><div id="meter-fill"></div></div><div id="meter-val"></div></div>
+  <div id="tray" class="hidden"></div>
+  <div id="actions">
+    <button id="btn-undo" class="ghost">撤销</button>
+    <button id="btn-next" class="primary">下一步 →</button>
+  </div>
+</div>
+
+<button id="hold-btn" class="hidden">按住</button>
+<div id="coach" class="hidden"><div class="hand"><svg viewBox="0 0 64 64" width="56" height="56"><path d="M24 58c-8 0-14-6-14-14V30a4 4 0 0 1 8 0v6h2V12a4 4 0 0 1 8 0v22h2V18a4 4 0 0 1 8 0v16h2V24a4 4 0 0 1 8 0v18c0 9-7 16-16 16h-8z" fill="#fff" stroke="#2a1f18" stroke-width="2.5" stroke-linejoin="round"/></svg></div><div class="txt"></div></div>
+<div id="ver"></div>
+<div id="praise" class="hidden"></div>
+<div id="banner" class="hidden"><span></span></div>
+
+<div id="pour-hud" class="hidden">
+  <div id="pour-tip">—</div>
+  <div id="pour-warn" class="hidden">—</div>
+</div>
+
+<div id="score" class="overlay hidden">
+  <div class="score-card">
+    <div class="score-top">
+      <canvas id="strip" width="28" height="120"></canvas>
+      <div>
+        <div id="grade">A</div>
+        <div id="score-total">0 分</div>
+        <div id="score-name" class="muted">—</div>
+      </div>
+    </div>
+    <ul id="score-lines"></ul>
+    <div id="tips"></div>
+    <button id="btn-again" class="primary big">再来一杯 →</button>
+  </div>
+</div>
+
+<div id="boot">载入中…</div>
+</div>
+<script type="module">import { boot } from '../../vendor/craft/main.js'; import G from './game.js'; boot(G);</script>
+</body>
+</html>

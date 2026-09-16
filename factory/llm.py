@@ -44,11 +44,11 @@ def _log(model, resp, tag):
                             "cost": (getattr(u, "cost", None) if u is not None else None)}, ensure_ascii=False) + "\n")
 
 
-def chat(messages, role="code", model=None, max_tokens=16000, temperature=0.2, json_mode=False, tag="", grow=True):
+def chat(messages, role="code", model=None, max_tokens=16000, temperature=0.2, json_mode=False, tag="", grow=True, extra=None):
     """返回 assistant 文本。json_mode=True 时要求模型只输出 JSON 对象。"""
     model = model or DEFAULTS[role]
     kw = {"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": temperature,
-          "extra_body": {"usage": {"include": True}}}
+          "extra_body": {"usage": {"include": True}, **(extra or {})}}   # extra: OpenRouter 额外参数，如 {"reasoning": {"effort": "low"}}
     if json_mode:
         kw["response_format"] = {"type": "json_object"}
     if kw["max_tokens"] >= 8000:                     # 长输出走流式，避免 HTTP 超时；逐块累积

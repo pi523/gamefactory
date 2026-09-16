@@ -29,9 +29,12 @@ def main():
     ap.add_argument("one_liner"); ap.add_argument("--id", required=True)
     ap.add_argument("--video-query", action="append", default=[], help="竞品实机视频搜索词，可多个；不给则按网页调研的竞品名搜")
     ap.add_argument("--ref", default=None, help="保真比对用哪段参考视频（标题关键词）；不给用最后一段")
+    ap.add_argument("--genre", choices=["craft"], default=None, help="craft = 手作模拟品类：走 craft_generate（引擎模板 vendor/craft/，不生图、不出 PRD），成品 games/<id>/")
     ap.add_argument("--skip", default="", help="跳过步骤，逗号分隔：research,video,moon,craft,prd,assets,generate,showcase")
     ap.add_argument("--attempts", type=int, default=3); ap.add_argument("--fidelity-attempts", type=int, default=2); ap.add_argument("--fidelity-pass", type=int, default=80)
     a = ap.parse_args()
+    if a.genre == "craft":
+        r = subprocess.run([PY, ROOT / "factory/craft_generate.py", a.one_liner, "--id", a.id, "--attempts", str(a.attempts)]); print("PIPELINE:", "DONE" if r.returncode == 0 else "FAIL", f"→ games/{a.id}/index.html"); sys.exit(r.returncode)
     skip = set(s.strip() for s in a.skip.split(",") if s.strip())
     game = ROOT / "games" / a.id; game.mkdir(parents=True, exist_ok=True)
     (game / "pipeline-log.jsonl").open("a", encoding="utf-8").write(json.dumps({"step": "start", "one_liner": a.one_liner, "ts": time.strftime("%F %T")}, ensure_ascii=False) + "\n")
