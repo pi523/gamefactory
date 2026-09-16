@@ -1,0 +1,167 @@
+{
+  "id": "h5-hard-rules-v2",
+  "static": {
+    "max_total_bytes": 4194304,
+    "scan_globs": [
+      "*.html",
+      "*.js",
+      "*.css"
+    ],
+    "forbid_patterns": [
+      "\\beval\\s*\\(",
+      "new\\s+Function\\s*\\(",
+      "document\\.write\\s*\\(",
+      "https?://"
+    ],
+    "require_strings": [
+      "__bf",
+      "<meta name=\"viewport\"",
+      "id=\"stage\""
+    ],
+    "allowed_import_prefixes": [
+      "./",
+      "../"
+    ],
+    "runtime_forbid_patterns": [
+      "document\\.",
+      "window\\.__bf",
+      "rt\\.scene",
+      "rt\\.renderer",
+      "rt\\.camera",
+      "rt\\.stage",
+      "rt\\.hud",
+      "rt\\.overlay",
+      "innerHTML",
+      "\\.style\\b",
+      "from 'three'",
+      "from \"three\""
+    ],
+    "runtime_note": "game.js 引入 bf-runtime.js 时，只能通过 rt 的 API 做事；直接改 DOM/CSS/three 场景会绕过运行时保证（背景铺法、层级、阴影），一律 FAIL。"
+  },
+  "browser": {
+    "viewports": [
+      {
+        "name": "mobile",
+        "w": 390,
+        "h": 844,
+        "fake_dpr": 3,
+        "primary": true
+      },
+      {
+        "name": "desktop",
+        "w": 1620,
+        "h": 861,
+        "fake_dpr": 2,
+        "primary": false
+      }
+    ],
+    "max_startup_ms": 3000,
+    "console_errors_allowed": 0,
+    "page_errors_allowed": 0,
+    "failed_requests_allowed": 0,
+    "note": "无头 Chromium 在 device_scale_factor>1 时截图拿不到 WebGL 画面，所以真实 dsf 固定 1，用 init script 把 window.devicePixelRatio 伪装成 fake_dpr，逼出游戏里像素密度相关的坐标/尺寸 bug，截图仍可用。"
+  },
+  "bot": {
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "target_score": 5,
+    "max_game_wall_s": 20,
+    "min_games_with_score": 2,
+    "idle_must_end_sim_s": 60,
+    "idle_time_scale": 4,
+    "warmup_no_life_loss_s": 6.0,
+    "idle_second_loss_min_s": 15.0,
+    "human": {
+      "reaction_ms": 700,
+      "action_interval_ms": 1000,
+      "min_survive_s": 40,
+      "target_score": 5,
+      "note": "慢手机器人=普通人：反应 0.7s、每秒最多操作一次；必须活过 40 秒并得 5 分。它过不了就是人过不了。"
+    },
+    "lesson_max_game_wall_s": 100,
+    "note_lesson": "教学课：机器人不按 target_score 停手，走完全部步骤（墙钟 ≤100s）",
+    "lesson_idle_must_end_sim_s": 90
+  },
+  "stage": {
+    "selector": "#stage",
+    "aspect_min": 0.44,
+    "aspect_max": 0.6,
+    "min_height_ratio": 0.92,
+    "center_tolerance_px": 6,
+    "note": "游戏只做竖屏：#stage 宽高比固定 9:16（0.5625），高度占满视口、水平居中；宽屏下两侧留黑。所有 target 坐标仍是视口 CSS 像素。",
+    "canvas_note": "canvas 的 CSS 尺寸必须等于 #stage 尺寸（±2px），drawingBuffer 可以是它的 dpr 倍；canvas 比 stage 大/小都是 setSize/setPixelRatio 用错。"
+  },
+  "layout": {
+    "file": "assets/layout.json",
+    "slot_tolerance_ratio": 0.6,
+    "path_tolerance_ratio": 0.06,
+    "note": "若游戏目录有 assets/layout.json，playing 期间每个 target 中心必须落在某个 slot 半径×0.6 内（slots 型）或距路径折线 ≤ 6% stage 高（path 型），否则物件'悬空'，FAIL。"
+  },
+  "render": {
+    "samples": 6,
+    "interval_ms": 350,
+    "note": "渲染一致性以幽灵检查为判据（state 声称的目标处必须有像素变化）；变化集中度仅打印参考值，不判 FAIL（2026-09-09 起）。",
+    "min_energy_ratio": 0.15,
+    "min_changed_pct": 2.0
+  },
+  "ui": {
+    "onboarding": "首局必须出现新手引导（每种动词第一次出现时手指动画+一句话），state().ui.hintsShown ≥ 1",
+    "emotion": "得分达到 target_score 的一局必须出现过情绪反馈（连击赞美大字/粒子/暖光），state().ui.praisesShown ≥ 1",
+    "note": "由共享运行时自动提供；游戏可用 rt.praise() 追加",
+    "warmup": "首局机器人游玩：仿真时间前 6 秒内 lives 不得下降（新手热身期）",
+    "pacing": "无输入对局：第 1 次掉命 ≥ 6 秒，第 2 次掉命 ≥ 15 秒；即开局前 15 秒最多丢 1 命，新手有时间看懂",
+    "verbs": "动词预算：整局 ≤3 个动词；开局前 5 个物件只用 1 个动词，之后逐个解锁；每个状态只允许一种操作"
+  },
+  "lesson": {
+    "note": "厂房 01 教学课（prd.workshop=cooking-lesson / state().lesson 存在时）：机器人必须完成全部步骤且每步有对错反馈；不允许命数归零；慢手机器人星级 ≥2。"
+  },
+  "realism": {
+    "applies_to": "workshop=cooking-lesson",
+    "goal": "视觉效果模拟真实做菜场景：锅内食材、火苗、蒸汽与背景同属一张照片体系；备料/调料用三维贴纸，但材质写实、位置符合常理（在台面上、比例合理、有接触阴影、边缘干净）",
+    "checklist": [
+      "锅内食材躺在锅底油面上，不悬浮、不压锅沿、不超出锅口",
+      "分量像一份家常菜，比例与锅一致，前后帧分量连贯",
+      "透视与相机角度一致（俯视约 50°），贴图无非等比压缩变形",
+      "锅内光照与背景一致（暖光、油面反光），无绿边/紫边/生硬贴纸边",
+      "状态切换有渐变，不硬切",
+      "备料为写实小碟/瓶罐，整齐放在右侧台面区（不在墙上、不悬空、不压到锅）；倾倒时瓶身倾斜且有颗粒/液流（游戏惯例：不要求画手）",
+      "火苗随火力档变化（小/中/大可辨）；锅上有蒸汽",
+      "备料贴纸边缘干净、底部有窄而实的接触阴影，尺寸比例像真实厨房物件",
+      "右侧备料点选准确：取最近的一件、拖动跟手不跳",
+      "画面无方形/矩形暗块或亮块、无残影、无占位色块"
+    ],
+    "machine_items": {
+      "5": "crossfade",
+      "9": "drag_follow"
+    },
+    "machine_note": "这两条静态截图判不了，模型一直回 null；改由 shoot_lesson.py 现场量像素（渐变：动作后 0.2s 锅区不得已等于终帧；跟手：拖到中点指尖附近有物件、原位有变化）",
+    "unjudged_is_fail": true,
+    "unjudged_note": "任何一条没判出来（null / 漏项 / 探针没结果）都算 FAIL：判官不许绿着里面是空的",
+    "gates": {
+      "per_state": "make_assets.judge_wok_state（贴回锅里让视觉模型审，不过重生 ≤3 次）",
+      "per_lesson": "factory/realism_review.py（整课截图逐帧审，任何一条 hard 不过 → REALISM: FAIL，不进终审页）"
+    },
+    "note": "2026-09-11 用户裁决：备料改三维贴纸，审查标准从'一眼看不出贴图'改为'位置/比例/阴影/边缘符合常理'。"
+  },
+  "craft_sim": {
+    "applies_to": "手作模拟品类（specs/genre-craft-sim.md），2026-09-11 用户裁决加入",
+    "no_clipping": "穿模是硬性 FAIL：游戏必须暴露 window.__game.checkClipping() → []；打分器在每个工序点调用，任一违规不放行。检查项：固体两两不重叠、固体不碰壁不穿底、装饰整体在内壁以内、果片切口卡在杯壁中心线、瓶身不进杯口",
+    "pure_html5": "纯 HTML5 交付（本地 http 即可跑），不用 claude 网页/artifact 展示；three 走 vendor/，无外链",
+    "no_instructions": "不告诉玩家加多少：订单只列配料名（打乱顺序）、固体分量档（去冰/少冰/正常冰/多冰 或 珍珠档）、装饰名；界面不出现目标线/光环/目标百分比/建议顺序；比例、分量、顺序、清晰度是隐形评分标准，结算时才用人话揭示",
+    "explicit_theme": "主题必须明确到一家店：调酒=酒吧（暗色、酒瓶、摇壶、玻璃杯、冰块），奶茶=奶茶铺（明亮、瓷砖、塑料杯、珍珠、粗吸管）；场景/器皿/配料/固体/装饰/UI 配色全部由主题决定，?theme= 切换，同一套引擎出不同游戏",
+    "dressing_realism": "台面陈设不用光溜溜的几何体：几何体勾形 + 贴图/凹凸（如柠檬=拉长的球 + 果皮毛孔贴图）",
+    "grader": "factory/craft_grade.py --theme <bar|teashop>：外部模型盲测（gpt-5.4 + gemini-3.1-pro 各 2 遍）+ 穿模检查，GRADE: PASS 才算过",
+    "phone_stage": "必须是手机屏幕大小：整个游戏装在居中的 9:16 容器里（宽 = min(100vw, 56.25vh)），桌面两侧留黑；背景与主体按这个画幅构图，桌面/手机看到的画面一致（对齐 stage.aspect 0.44–0.6）",
+    "theme_process": "工序跟主题走：奶茶铺多一道「摇匀」（扣盖、左右甩、液体混匀起细泡），要摇的配方订单里会说，奶盖/分层类摇了要扣分（隐形评分）",
+    "themes": "2026-09-14 起七家店共用一个引擎：bar / teashop / cafe / izakaya / teahouse / shavedice / smoothie；每家至少一道别家没有的工序机制；打分器按 `window.__theme.phases` 通用驾驭（auto.start(phase, part) / auto.busy()）",
+    "second_set": "2026-09-14 第二组 game-drink2/（同规则）：beer 精酿酒吧打酒 / tehtarik 拉茶 / champagne 香槟塔 / juicecolor 果汁调色 / gongfu 关公巡城；不限于订单制，任务卡只说要什么，手艺（泡沫/高度/均匀/色差/时机）全是隐形评分；打分器 `--cand game-drink2 --theme <id>`",
+    "third_set": "2026-09-15 中餐组 chinese-food/（同壳同规则）：dumpling 包饺子 / lamian 拉面 / tanghulu 糖葫芦 / jianbing 煎饼果子 / tanghua 糖画（2026-09-16 火锅题材撞车换掉；同日整组按高写实重做：皮/饼/面都是真会变形的网格，成品克隆真实几何）；饮品两组已归到 drinks/ 下；每步教程指引（coach）一只手 + ≤12 字，底部说明一句话，长文案不再出现",
+    "realism_bar": "背景与整体画风要迭代到写实为止（含第一组七家店）：材质有贴图与凹凸、陈设是可辨认实物（瓶有酒标与液体、罐里有东西、灯真的照亮台面、黑板有字）、墙脚有过渡、远景压暗；盲测 visuals/material 低于寿司就继续改，不等用户来指",
+    "assembly_and_realism_check": "2026-09-16 用户硬性规定 1：生成过程中要一直反复查穿模（每一步 checkClipping），并且查\"不符合现实的建模\"——部件散开/悬空（壶嘴、盖子、把手、灯泡没接在主体上）。机械检验 vendor/bf-checks.js:checkAssembly(scene)：每个 Group 的直接部件包围盒膨胀 0.03 后必须至少挨着一件；散落集合（陈设总组、锅里的饺子、浇头）标 userData.loose 跳过。三套引擎的 checkClipping() 都把它并进来，smoke / craft_grade 任一违规不放行。人工清单：壶嘴/把手/盖子是否长在壶身上、灯泡是否接线、机身与冲煮头是否相连。",
+    "background_restraint": "2026-09-16 用户硬性规定 2：背景不要太复杂，且不能跟游戏主体重复——主体是水壶/茶壶/锅的游戏，背景里不放同款水壶/茶壶/锅（玩家抓不到重点）。已清掉：teahouse 背景茶壶、潮汕炭炉水壶、拉面馆背景大汤锅。陈设只放主题氛围件（罐子/黑板/灯/植物/成品陈列），每家 ≤ 8 件，远景压暗。",
+    "physics_consistency": "2026-09-16 用户硬性规定 3：必须符合物理——倾倒方向不能反、液体只能从壶嘴出、壶嘴出水时必须比壶盖/后沿低。机械检验 vendor/bf-checks.js:pourPhysics(stream, 壶嘴世界坐标, 参考点)：流柱起点必须在壶嘴上（≤0.08），给了参考点则壶嘴 y 必须低于它；game-drink Kettle 用壶盖钮做参考，game-drink2 gongfu 水壶/茶壶用盖顶，juicecolor/champagne 查起点；各引擎 checkPhysics() 并入 checkClipping()。"
+  }
+}

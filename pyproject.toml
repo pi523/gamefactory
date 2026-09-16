@@ -1,0 +1,11 @@
+[project]
+name = "blackfactory"
+version = "0.1.0"
+description = "游戏黑灯工厂：一句话题材 → PRD → 代码+素材 → 自动检验 → 人工终审"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=2.0",
+  "playwright>=1.55",
+  "pillow>=11",
+  "jsonschema>=4",
+]

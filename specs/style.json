@@ -1,0 +1,116 @@
+{
+  "id": "realistic-cutout-v1",
+  "locked": true,
+  "note": "风格写死。物件抠图以用户的蘑菇/胡萝卜/玉米切块样图为准；场景与 UI 以用户 2026-09-03 给的参考图为准（近黑背景、铸铁锅煎牛排、暖光、蒸汽、右上角铜金描边圆按钮）。任何环节不得改动 look/scene/ui，只能追加 subjects。",
+  "look": {
+    "genre": "写实摄影级食材抠图（photorealistic studio food cutout）",
+    "background": "完全透明（alpha=0），不要任何背景色、桌面、阴影、反射",
+    "lighting": "柔和影棚漫射顶光，主体有轻微自然高光（如玉米油亮感），无硬阴影",
+    "color": "自然高饱和本色，白平衡中性，不做滤镜、不做风格化",
+    "camera": "微距/中距，浅景深关闭（全清晰），常用角度：正俯视切面、45° 斜侧、平躺侧面",
+    "edge": "抠图边缘干净，1–2px 抗锯齿过渡，禁止白边/黑边/发光",
+    "composition": "一张图只放一个物件，主体居中，占画幅 70%–85%"
+  },
+  "output": {
+    "format": "png",
+    "mode": "RGBA",
+    "size": 1024,
+    "aspect": "1:1",
+    "path_pattern": "assets/<类别>/<名称><序号>.png",
+    "example": "assets/食物/牛排1.png"
+  },
+  "forbid": [
+    "文字",
+    "水印",
+    "logo",
+    "餐具",
+    "手",
+    "盘子",
+    "背景",
+    "多物件同图",
+    "卡通/插画/3D 渲染感"
+  ],
+  "prompt_template": {
+    "positive": "photorealistic studio photo of a single {subject_en} ({subject_zh}), {angle}, isolated cutout on fully transparent background, soft diffused top studio lighting, natural saturated colors, sharp focus everywhere, clean anti-aliased edges, no shadow, centered, fills 80% of frame, 1:1, 1024x1024, png with alpha",
+    "negative": "text, watermark, logo, plate, cutlery, hand, table, background, multiple objects, shadow, reflection, cartoon, illustration, 3d render, cgi, blurry, white fringe, dark outline",
+    "angles": [
+      "top-down view of the cut face",
+      "45 degree three-quarter view",
+      "lying on its side, profile view"
+    ]
+  },
+  "scene": {
+    "anchor_zh": "参考图：近黑到暗棕的渐变背景（#0d0b0a→#2a1d14），画面中央一件写实主体——铸铁平底锅里一块煎得焦香的牛排，锅底油脂反光；暖色主光从右上方打下，锅下方有一团暖橙色余光/光晕，锅上方飘着淡淡蒸汽；整体像高端餐饮广告或 3A 手游封面。",
+    "anchor_en": "Ultra-realistic 3D-render / studio-photo look: near-black to dark umber gradient background, a single hero subject centered (e.g. a seared steak in a cast-iron skillet with glossy oil), warm key light from upper right, soft warm orange glow pooling beneath the subject, faint wisps of steam, subtle rim light, cinematic, premium mobile-game key art, no text, no UI, no watermark",
+    "background_rules": "背景必须是与题材对应的真实餐饮场景（scene_type 决定：中餐后厨/西餐开放厨房/烧烤摊/烘焙房/日料板前/火锅店/早餐铺/咖啡吧……），写实、清晰、不虚化；并且**背景就是关卡布局**：PRD.layout 要求的锅位/格子/轨道要在背景里明确画出（数量、排列、透视都按要求），玩法物件只能出现在这些位置上。背景里不放任何食材/目标物；上 12% 留给 HUD，所以顶部要暗一些。竖屏 9:16 唯一。 布局只能占画面宽度中间 70%（左右各留 15%），因为 19.5:9 的窄手机会裁掉两侧约 8%。",
+    "negative_en": "text, letters, logo, watermark, UI, HUD, buttons, pills, bars, icons, interface, frame, border, cluttered, people, hands, food items",
+    "scene_types": [
+      "中餐后厨",
+      "西餐开放厨房",
+      "烧烤摊",
+      "烘焙房",
+      "日料板前",
+      "火锅店",
+      "早餐铺",
+      "咖啡吧",
+      "街头小吃车",
+      "海鲜大排档"
+    ]
+  },
+  "ui": {
+    "palette": {
+      "bg": "#0d0b0a",
+      "panel": "rgba(20,16,14,0.72)",
+      "gold": "#c9a86a",
+      "gold_dim": "rgba(201,168,106,0.55)",
+      "text": "#f3ede4",
+      "text_dim": "#b8ae9f",
+      "danger": "#e2574a",
+      "accent_glow": "rgba(255,140,50,0.35)"
+    },
+    "font": "system-ui, -apple-system, 'PingFang SC', 'Noto Sans CJK SC', sans-serif；数字用 600 字重；HUD 字号 18–22px，标题 30–36px",
+    "hud": "左上：分数（金色数字 + 米白小标签）；右上：命数（金色描边小图标或 ♥）与一个 44px 圆形细描边按钮（1.5px gold_dim 线、panel 半透明底）；HUD 全部 pointer-events:none，除了按钮。",
+    "overlay": "首页（menu）：只有游戏名和一个带呼吸光环的圆形『开始』按钮，不放任何玩法说明或副标题——教学交给进局后的自动引导。结算（over）：居中圆角深色半透明面板，标题金色，星级、纪录、得分、'点击任意位置再来一局'。面板 pointer-events:none，点击穿透到 canvas。",
+    "background": "#stage 内第一层 #bg：background-image 用 BF_ASSETS.__scene.portrait，background-size:cover，background-position:center；上方叠 12% 高的暗渐变托 HUD；不虚化、不整体压暗。three.js renderer alpha:true，尺寸=stage 尺寸，scene.background=null。",
+    "feedback": "命中：目标处 150ms 的暖色光斑 + 缩放消失；漏掉：命数图标抖一下并变 danger 色；连击≥3 显示金色 'x3' 小字 400ms。全部纯 CSS/three.js，不用外部资源。",
+    "forbidden": "纯色背景出厂、默认字体裸文字、无边框无层次的 HUD、蓝紫渐变/卡通配色、emoji 当图标（♥ 除外）",
+    "layering": "DOM 层级从下到上：#bg（背景图+暗角）< canvas（three.js，alpha:true）< #hud < #overlay。overlay 和 hud 必须是 canvas 的兄弟节点且 z-index 更高，任何游戏物件都不能画在面板文字之上。",
+    "safe_area": "所有可点物件的完整包围盒必须在视口内，左右各内缩 8%，上方留 HUD 高度、下方留 6%；出生点/消失点放在视口外时要在完全离屏后再算漏掉。",
+    "sprite_lighting": "贴图面片用 MeshStandardMaterial(map, transparent, alphaTest 0.05, roughness 0.6) 接受场景光；场景放一盏暖色 DirectionalLight(0xffc27a) 从右上打下 + 弱 HemisphereLight；每个物件脚下放一枚软阴影贴片（径向渐变黑 0.45→0 的透明面片）建立接触感。",
+    "orientation": "只做竖屏 9:16。#stage 固定宽高比，height=min(100vh, 100vw*16/9)，水平垂直居中；宽屏下 body 背景 #050403，stage 外留黑。所有尺寸以 stage 高 844 逻辑像素为基准缩放。",
+    "icons": "命数用内联 SVG 心形（stroke #c9a86a 1.5px，满心 fill rgba(201,168,106,.9)，空心无 fill），禁止 emoji。",
+    "textures": "贴图材质的 color 必须保持 0xffffff，禁止给贴图乘任何色调（否则写实抠图会变成色块）；氛围靠场景灯光和阴影贴片，不靠改贴图颜色。贴图用 SRGBColorSpace。",
+    "play_layer": "背景图已包含全部环境和关卡容器（锅、格子、传送带）。three.js 玩法层只放：可点物件贴图面片、脚下软阴影、命中光斑、连击文字；禁止再画平台/托盘/锅/轨道类几何体。",
+    "review_focus": "评审优先级：1 物件是否写实且未被改色 2 面板/HUD 可读性与层级 3 安全区 4 光影一致性；不要求 3D 建模牛排等超出贴图面片能力的东西。",
+    "physics": "物理一致：所有物件必须落在 BF_ASSETS.__layout 给的锚点上（slots：中心与半径，单位为 stage 的 0–1 归一化坐标；path：折线）。物件屏幕尺寸 = 锚点半径 × 1.6–2.0，不得比锅/格子大或小很多；'冒出'动画从锚点内部向上 0→1 缩放并带轻微上抛再落回，不能凭空出现；沿路径运动的物件底边贴路径线；每个物件脚下有软阴影贴片；任何时刻没有物件悬在背景的空气区域。",
+    "onboarding": "运行时自动教学：每种动词（tap/drag/swipe）第一次出现在 targets 里时，在目标处放手指动画（拖：从起点到终点往返；滑：沿方向箭头；点：按压），配一句提示（opts.hints={tap,drag,swipe}），做出该手势或 4.5 秒后消失，每次打开只教一次。不改变模拟。 目标可带状态化 hint 文案；引导显示时仿真减速 0.45×；每个动词做对 2 次才算学会。热身：开局前 6 秒不掉命，前 3 个物件窗口 ×2。",
+    "emotion": "连击（2.5 秒内连续得分）到 3/5/8/12 时弹金色大字（漂亮！/太棒了！/火力全开！/神级手艺！，opts.praise 可改）+ 暖光 + 金色粒子；结算给 ★ 星级（opts.par 为 2 星线，2×par 为 3 星）与「新纪录！」；游戏在关键时刻可 rt.praise('刚刚好！')。"
+  },
+  "imagegen": {
+    "provider": "openrouter",
+    "models": {
+      "background": "google/gemini-3-pro-image",
+      "prop": "google/gemini-3.1-flash-image"
+    },
+    "approx_cost_usd": {
+      "background": 0.14,
+      "prop": 0.07
+    },
+    "prop_template": "Photorealistic studio photo of a single {subject_en} ({subject_zh}) for a premium dark-kitchen mobile game, {angle}, isolated on a solid pure magenta (#FF00FF) flat background filling the entire frame, soft warm top light, glossy natural highlights, sharp focus, centered, subject fills 80% of frame, no shadow on background, no text, square 1:1",
+    "prop_negative": "shadow, reflection on background, text, watermark, plate, bowl, pan, wok, pot, skillet, spatula, chopsticks, cutlery, hand, table, multiple objects, cartoon frame, blurry",
+    "background_template": "{anchor_en}. A {scene_type_en} interior scene as the stage for a mobile game '{title}'. {scene_hint}. LAYOUT REQUIREMENT (must be exact): {layout_en}. Camera slightly above eye level looking down about 30-40 degrees so the layout is fully visible; the layout occupies the middle 55% of the frame height (between 25% and 80% from top) and ONLY the central 70% of the frame width (leave at least 15% empty margin on both left and right), nothing important in the top 15%. ABSOLUTELY NO interface elements: no HUD, no buttons, no pills, no bars, no icons, no text, no frames. No food, no ingredients, no people. Lighting and rendering must match the style described above. Vertical 9:16 portrait, 1080x1920.",
+    "orientation": {
+      "portrait": "Vertical 9:16 portrait composition, 1080x1920"
+    },
+    "key_color": "#FF00FF",
+    "per_game_limits": {
+      "max_props": 10,
+      "variants_per_prop": 2,
+      "prop_size_px": 512,
+      "background_jpeg_quality": 82,
+      "prop_webp_quality": 85
+    },
+    "layout_extract_prompt": "这是一张手机竖屏游戏背景图。请找出图中的【{layout_zh}】，返回 JSON：{{\"type\":\"{layout_type}\",\"slots\":[{{\"x\":0-1,\"y\":0-1,\"r\":0-1}}...]}}（slots 型：每个容器开口中心的归一化坐标 x,y 和半径 r，r 取开口宽度的一半除以图宽）或 {{\"type\":\"path\",\"points\":[{{\"x\":0-1,\"y\":0-1}}...],\"width\":0-1}}（path 型：容器/轨道中心线上从左到右 4–6 个点，width 为轨道宽度/图高）。期望数量：{count}。只输出 JSON。找不到或数量不符就如实返回你看到的数量。",
+    "background_template_closeup": "{anchor_en}. A clean, orderly GAME SCENE render for the mobile cooking game '{title}', like a modern first-person cooking simulator: the player stands at a {scene_type_en} stove and looks down at about 50 degrees. LAYOUT REQUIREMENT (must be exact): {layout_en}. Composition rules: the wok is centered slightly left and is the hero; a tiled wall fills the top ~22% of the frame; a brushed stainless-steel counter fills the rest; the right 28% of the counter is COMPLETELY EMPTY and evenly lit (small prep bowls will be placed there by the game). Even, soft studio-like kitchen lighting, no harsh shadows, no motion blur, no vignette, camera perfectly level (horizontal counter edge). Photoreal materials (seasoned black carbon steel, brushed steel, ceramic tiles) rendered like a high-end game engine, but NOT a candid photo: nothing tilted, nothing cluttered. No other pans, no bottles, no utensils, no food, no hands, no people. ABSOLUTELY NO interface elements: no HUD, no buttons, no text, no frames. Vertical 9:16 portrait, 1080x1920."
+  }
+}

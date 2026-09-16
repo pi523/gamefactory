@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BlackFactory PRD",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "one_liner",
+    "platform",
+    "engine",
+    "core_loop",
+    "controls",
+    "end_conditions",
+    "session_length_s",
+    "requirements",
+    "assets"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "one_liner": {
+      "type": "string",
+      "description": "用户输入的一句话题材，原文"
+    },
+    "platform": {
+      "const": "html5"
+    },
+    "engine": {
+      "const": "three"
+    },
+    "style_ref": {
+      "const": "specs/style.json"
+    },
+    "moons": {
+      "type": "array",
+      "description": "竞品（月亮）清单",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "why",
+          "evidence"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "evidence": {
+            "enum": [
+              "[实测]",
+              "[网页]",
+              "[视频抽帧]",
+              "[推导]",
+              "[假设]"
+            ]
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "core_loop": {
+      "type": "string"
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "tap",
+          "drag",
+          "swipe"
+        ]
+      },
+      "minItems": 1
+    },
+    "end_conditions": {
+      "type": "object",
+      "required": [
+        "lose"
+      ],
+      "properties": {
+        "win": {
+          "type": "string"
+        },
+        "lose": {
+          "type": "string"
+        }
+      }
+    },
+    "session_length_s": {
+      "type": "object",
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "evidence",
+          "check"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^R\\d+$"
+          },
+          "text": {
+            "type": "string"
+          },
+          "evidence": {
+            "enum": [
+              "[实测]",
+              "[网页]",
+              "[视频抽帧]",
+              "[推导]",
+              "[假设]"
+            ]
+          },
+          "check": {
+            "type": "object",
+            "required": [
+              "layer"
+            ],
+            "properties": {
+              "layer": {
+                "enum": [
+                  "static",
+                  "browser",
+                  "bot",
+                  "manual"
+                ]
+              },
+              "expr": {
+                "type": "string",
+                "description": "机器可判定的断言描述；layer=manual 时留给终审"
+              }
+            }
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "name",
+          "count",
+          "subject_en"
+        ],
+        "properties": {
+          "category": {
+            "enum": [
+              "食物",
+              "道具",
+              "场景",
+              "UI"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "subject_en": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "物件的贴图状态序列，如 ['生','金黄','焦']；单状态物件省略"
+          }
+        }
+      }
+    },
+    "scene_type": {
+      "type": "string",
+      "enum": [
+        "中餐后厨",
+        "西餐开放厨房",
+        "烧烤摊",
+        "烘焙房",
+        "日料板前",
+        "火锅店",
+        "早餐铺",
+        "咖啡吧",
+        "街头小吃车",
+        "海鲜大排档"
+      ]
+    },
+    "scene_hint": {
+      "type": "string",
+      "description": "一句中文描述背景环境，不含玩法物件"
+    },
+    "layout": {
+      "type": "object",
+      "required": [
+        "type",
+        "count",
+        "zh",
+        "en"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "slots",
+            "path"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "zh": {
+          "type": "string",
+          "description": "背景里要画出的容器/轨道，如 '3×3 共 9 口空的铸铁平底锅'"
+        },
+        "en": {
+          "type": "string",
+          "description": "同上英文，给生图 prompt；描述数量、排列、透视"
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "art_style": {
+          "type": "string"
+        },
+        "render": {
+          "type": "string"
+        },
+        "mood": {
+          "type": "string"
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ui_style": {
+          "type": "string"
+        },
+        "props_style": {
+          "type": "string"
+        },
+        "background_style": {
+          "type": "string"
+        },
+        "style_prompt_en": {
+          "type": "string"
+        },
+        "ui_palette": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

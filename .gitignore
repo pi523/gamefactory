@@ -1,0 +1,43 @@
+# 密钥与本机环境
+.env
+.venv/
+.scratch/
+__pycache__/
+.DS_Store
+
+# 检验产物与临时目录（可重跑生成）
+reports/
+.mutants/
+showcase/shots/
+games/*/attempts/
+games/*/video/
+games/*/play/
+recipe-extractor/logs/
+recipe-extractor/recipes/
+
+# 原始素材与大文件（不入库：视频、拼图表、1024 原图）
+source/
+*.mp4
+*.mov
+*.webm
+
+# 公共素材库单件（269MB，可由 source/sheets 用 import_sheets.py 重新拆出；manifest.json 保留）
+assets/食物/*.png
+assets/食物/*.webp
+
+# 盲测打分器的截图目录（每轮几十 MB，可重跑；grade-latest-*.md 与 grade-log.jsonl 保留）
+**/grade/
+
+# 只上传工厂流水线本身（2026-09-16 用户裁决）：游戏成品、素材、终审页、长篇笔记都不入库
+/games/
+/drinks/
+/chinese-food/
+/game-sushi/
+/preview.html
+/assets/
+/showcase/
+/HOWTO.md
+/黑灯自检-*.md
+/specs/craft-sim-2.md
+/specs/gaps.md
+/reports/
