@@ -12,7 +12,7 @@
 ## 跑起来
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -e . && .venv/bin/playwright install chromium
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/playwright install chromium
 cp .env.example .env                                   # 填 OPENROUTER_API_KEY
 .venv/bin/python factory/pipeline.py "一句话题材" --id <game-id>
 python3 factory/serve.py 8765                           # 本地预览

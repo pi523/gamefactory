@@ -1,0 +1,5 @@
+openai>=2.0
+playwright>=1.55
+pillow>=11
+jsonschema>=4
+yt-dlp>=2025.1

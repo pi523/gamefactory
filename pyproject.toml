@@ -10,3 +10,6 @@ dependencies = [
   "jsonschema>=4",
   "yt-dlp>=2025.1",
 ]
+
+[tool.setuptools]
+packages = []   # 纯脚本仓库：pyproject 只用来声明依赖，pip install -e . 即装依赖

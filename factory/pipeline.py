@@ -2,7 +2,7 @@
 """黑灯工厂一条命令：一句话题材 → 三路学习（网页竞品 / 竞品视频 / 做菜工艺）→ PRD → 背景即布局+专属素材 → 代码 → 五层检验 → 视觉评审 → 保真比对回灌 → 终审页。
 用法:
   .venv/bin/python factory/pipeline.py "章鱼小丸子摊：往格子里倒面糊，半熟用签子翻面，烤到金黄夹走，烤焦掉命" --id takoyaki \\
-      --dish "章鱼小丸子" --video-query "takoyaki game gameplay" --ref "takoyaki"
+      --video-query "takoyaki game gameplay" --ref "takoyaki"
 每一步的裁决写 games/<id>/pipeline-log.jsonl；任一步失败停下并打印该步日志路径。--skip 可跳过已完成的步（如 --skip research,video）。
 """
 import argparse, json, subprocess, sys, time
