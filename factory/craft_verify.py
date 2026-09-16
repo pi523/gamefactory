@@ -38,7 +38,9 @@ def run(game_dir: Path, out: Path, text_limit=14):
         R["phases"] = phases
         if len(phases) < 3 or phases[-1] != "serve": R["errors"].append(f"工序表要 3–5 道且最后是 serve，现在是 {phases}")
         def step(tag, dt=0.1):
-            c = pg.evaluate(f"() => {{ window.__advance({dt}); return window.__game.checkClipping(); }}"); R["steps"] += 1
+            t1 = time.time(); c = pg.evaluate(f"() => {{ window.__advance({dt}); return window.__game.checkClipping(); }}"); R["steps"] += 1
+            el = time.time() - t1; R["slowest"] = max(R.get("slowest", 0), el)
+            if el > 6 and not R.get("slow_flagged"): R["slow_flagged"] = True; R["errors"].append(f"太慢：推进 0.1s 游戏时间用了 {el:.1f}s 真实时间（{tag}）——update/clipping 里有 O(n²) 或每帧重建几何，简化")
             if c: R["clips"].append((tag, c))
             h = pg.evaluate("() => document.getElementById('hint').textContent"); R["hints"].append(h)
         def shot(name, adv=0.0):
@@ -88,7 +90,7 @@ def main():
     passed = not R["errors"] and not R["clips"] and R["score"] is not None
     R["pass"] = passed
     if a.json: Path(a.json).write_text(json.dumps(R, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"phases: {R['phases']}  steps: {R['steps']}  score: {R['score']} {R['grade']}  {R['seconds']}s")
+    print(f"phases: {R['phases']}  steps: {R['steps']}  score: {R['score']} {R['grade']}  {R['seconds']}s  最慢一步 {R.get('slowest', 0):.1f}s")
     for e in R["errors"][:8]: print("  ✗", e)
     for c in R["clip_summary"][:8]: print("  ✗ 穿模/组装/物理:", c)
     for h in R["text_too_long"][:4]: print("  ⚠ 提示太长:", h)
