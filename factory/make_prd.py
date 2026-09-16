@@ -71,7 +71,7 @@ def main():
     a = ap.parse_args()
     schema = json.loads((ROOT / "specs/prd.schema.json").read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
-    manifest = json.loads((ROOT / "assets/manifest.json").read_text(encoding="utf-8"))
+    mp = ROOT / "assets/manifest.json"; manifest = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else {}   # 公共素材库可选：没有就全部由 make_assets 专属生成
     names = sorted(n for cat in manifest.values() for n in cat)
 
     research = None

@@ -18,7 +18,7 @@ cp .env.example .env                                   # 填 OPENROUTER_API_KEY
 python3 factory/serve.py 8765                           # 本地预览
 ```
 
-不需要 node：JS 语法自检和所有浏览器操作都走 Python playwright。
+需要 Python 3.12+，不需要 node：JS 语法自检和所有浏览器操作都走 Python playwright。竞品视频那一步用 yt-dlp 抓取，抓不到会跳过不阻塞。
 
 ## 目录
 

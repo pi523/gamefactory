@@ -174,7 +174,7 @@ def judge_wok_state(game, name, st, rgba_master, lay, bg):
     cx, cy = pool["x"] * W, pool["y"] * H; side = int(pool["rx"] * W * 2 * 1.35)
     comp = bg.copy(); sp = rgba_master.resize((side, side), _I.LANCZOS); comp.paste(sp, (int(cx - side / 2), int(cy - side / 2)), sp)
     r = int(pool["rx"] * W * 2.6); crop = comp.crop((max(0, int(cx - r)), max(0, int(cy - r * 0.9)), min(W, int(cx + r)), min(H, int(cy + r * 0.9))))
-    chk = ROOT / "source/generated" / game.name / f"judge_{name}_{re.sub(r'[\\/:*?\"<>|\s]+', '·', st)}.jpg"; crop.save(chk, quality=85)
+    safe_st = re.sub(r'[\\/:*?"<>|\s]+', "·", st); chk = ROOT / "source/generated" / game.name / f"judge_{name}_{safe_st}.jpg"; crop.save(chk, quality=85)
     q = (f"这是一款做菜游戏的画面局部：锅里应该是「{name}」在「{st}」这个阶段。请像美术总监一样严格判断这张图是否可以直接上线：食物是否真的躺在锅底（不是悬浮、不压锅沿、不超出锅口、汤汁不爬到锅壁高处），大小是否像家常一份菜（不是巨型积木、不是半锅汤），透视与光照是否与锅一致，颜色是否正常（无绿边/紫边/生硬贴纸边）。"
          "只输出 JSON {\"ok\": true/false, \"why\": \"一句话\"}。有任何一条明显不对就 false。")
     try:

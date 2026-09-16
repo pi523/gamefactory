@@ -9,8 +9,7 @@ import hashlib, json, subprocess, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TRACKED = ["vendor/bf-lesson.js", "vendor/bf-runtime.js", "factory/make_lesson_game.py", "factory/make_assets.py", "factory/verify.py", "factory/bot.py",
-           "factory/realism_review.py", "factory/shoot_lesson.py", "specs/rules/h5-hard-rules.json"]
+TRACKED = ["vendor/bf-runtime.js", "vendor/bf-checks.js", "factory/generate.py", "factory/make_assets.py", "factory/verify.py", "factory/bot.py", "specs/rules/h5-hard-rules.json"]
 
 
 def sha(p: Path):

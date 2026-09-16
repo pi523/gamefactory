@@ -29,7 +29,7 @@ def main():
 
     local_path = game / "assets/manifest.json"
     local = json.loads(local_path.read_text(encoding="utf-8")) if local_path.exists() else {}
-    shared = json.loads((ROOT / "assets/manifest.json").read_text(encoding="utf-8"))
+    sp = ROOT / "assets/manifest.json"; shared = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else {}   # 公共素材库可选
     rel_root = os.path.relpath(ROOT, game).replace(os.sep, "/")
     inj = {}
     kinds = list(kinds) + [n for n in (local.get("效果") or {}) if n not in kinds]          # 效果层（原地生成的火苗/蒸汽）不在 PRD 里

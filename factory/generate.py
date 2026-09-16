@@ -232,7 +232,7 @@ def main():
     prd = json.loads((game / "prd.json").read_text(encoding="utf-8"))
     contract = (ROOT / "specs/debug-contract.md").read_text(encoding="utf-8")
     rules = json.loads((ROOT / "specs/rules/h5-hard-rules.json").read_text(encoding="utf-8"))
-    manifest = json.loads((ROOT / "assets/manifest.json").read_text(encoding="utf-8"))
+    mp = ROOT / "assets/manifest.json"; manifest = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else {}   # 公共素材库可选
     names = sorted(n for cat in manifest.values() for n in cat)
     style = json.loads((ROOT / "specs/style.json").read_text(encoding="utf-8"))
     lp = game / "assets/manifest.json"
